@@ -108,8 +108,8 @@ public class FMRadio extends JFrame{
 		
 		
 		//Create event handling objects.
-		back.addActionListener(new Switch(0, CurrentStation));
-		forward.addActionListener(new Switch(1, CurrentStation));
+		back.addActionListener(new Back(CurrentStation));
+		forward.addActionListener(new Forward(CurrentStation));
 		station1.addActionListener(new SetStation1(0));
 		station2.addActionListener(new SetStation1(1));
 		station3.addActionListener(new SetStation1(2));
@@ -118,58 +118,41 @@ public class FMRadio extends JFrame{
 		station6.addActionListener(new SetStation1(5));
 		station7.addActionListener(new SetStation1(6));
 
-	}
+	}//Builder.
 	
+	//Setter current station.
 	public void SetCurrStation(int Switching)
 	{
 		CurrentStation = Switching;
-	}
+	}//Set Current Station
 	
+	//Getter current station.
 	public int GetCurrStation()
 	{
 		return CurrentStation;
-	}
+	}//Get Current Station
 	
-	public class Switch implements ActionListener 
+	//Implement back button.
+	public class Back implements ActionListener 
 	{
-		
-		int StationSwitcher = 0;
-		int LeftRight = 2;
-		public Switch(int a, int CurrentStation) 
+			
+		//Constructor.
+		public Back(int CurrentStation1) 
 		{			
-			LeftRight = a;
-			StationSwitcher = CurrentStation;		
+			SetCurrStation(CurrentStation1);		
 		}//Switch constructor.
 		
-		public int GetSwitch()
-		{
-			return StationSwitcher;
-		}//Get Switch.
-		
+		//Handle action from button press.
 		public void actionPerformed(ActionEvent e) 
-		{		
-			//Set Left or right.
-			int LeftOrRight = GetCurrStation();
-			
-			if (StationSwitcher == 0 && LeftOrRight == 0) 
+		{			
+			//If current station is out of bounds, reset.
+			if (GetCurrStation() == 0)
 			{
 				SetCurrStation(6);
 			}//If.
-			/*
-			 * 
-			 * Forward button needs re-logic.
-			 * 
-			 * 
-			 */
-			if (LeftRight == 1) 
-			{
-				SetCurrStation(GetCurrStation() + 1);
-				if (GetCurrStation() == 7)
-				{
-					SetCurrStation(0);
-				}
-			}//Else if.
-			else 
+				
+			//Decrement the station.
+			else
 			{
 				SetCurrStation(GetCurrStation() - 1);
 			}//Else.
@@ -184,6 +167,44 @@ public class FMRadio extends JFrame{
 			
 		}//Actions Performed.
 	}//Switch Listener.
+	
+	//Forward button.
+	public class Forward implements ActionListener 
+	{
+		//Forward constructor.
+		public Forward(int CurrentStation1) 
+		{
+			SetCurrStation(CurrentStation1);
+		}
+
+		//Action button handle when pressed.
+		public void actionPerformed(ActionEvent e) 
+		{
+			//Get current station, reset if out of bounds.
+			if (GetCurrStation() == 6)
+			{
+				SetCurrStation(0);
+			}//If.
+				
+			//Increment station.
+			else
+			{
+				SetCurrStation(GetCurrStation() + 1);
+			}//Else.
+	
+	
+			//Store Song information into strings.
+			String stations = "Current Station: " + SStationArray[GetCurrStation()];
+			String thisStation = "Current Frequency: " + Frequency[GetCurrStation()];
+	
+			//Store song strings into labels.
+			label1.setText(stations);
+			label2.setText(thisStation);
+		}//Action Performed.
+	}//Forward.
+	
+	
+	
 
 	//Change Station and Frequency Name.
 	public class SetStation1 implements ActionListener{
